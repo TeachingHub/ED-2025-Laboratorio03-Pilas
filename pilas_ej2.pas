@@ -230,6 +230,7 @@ begin
     test_correcto := test_correcto and (toString(p) = '1 2 3 ');
 end;
 
+
 { Ejercicio 2.8 }
 function testContarApariciones: boolean;
 var
