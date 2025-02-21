@@ -8,8 +8,18 @@ var
     libro: TElement;
 
 procedure invertirPila(var p: tPilaElementos);
+var
+    tempPila: tPilaElementos;
+    elemento: TElement;
 begin
-    WriteLn('No implementado...');
+    initialize(tempPila);
+    while not isEmpty(p) do
+    begin
+        elemento := peek(p);
+        pop(p);
+        push(tempPila, elemento);
+    end;
+    p := tempPila;
 end;
 
 procedure imprimirPila(p: tPilaElementos);

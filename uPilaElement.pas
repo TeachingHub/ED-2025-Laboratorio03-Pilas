@@ -20,7 +20,7 @@ type
     { Elimina el elemento de la cima de la pila }
     procedure pop(var p: tPilaElementos);
     { Devuelve el elemento de la cima de la pila }
-    procedure peek(p: tPilaElementos; var x: TElement);
+    function peek(p: tPilaElementos): TElement;
     { Devuelve true si la pila está vacía }
     function isEmpty(p: tPilaElementos): boolean;
 
@@ -56,7 +56,7 @@ var
     nuevo: ^tnodo;
 begin
     new(nuevo); { Crea un nuevo nodo }
-    nuevo^.info := x; { Asigna el valor al nuevo nodo }
+    assign(nuevo^.info, x); { Asigna el valor al nuevo nodo }
     nuevo^.ant := p; { Enlaza el nuevo nodo con la anterior cima }
     p := nuevo; { Actualiza la cima de la pila }
 end;
@@ -75,10 +75,10 @@ begin
 end;
 
 { Devuelve el elemento de la cima de la pila }
-procedure peek(p: tPilaElementos; var x: TElement);
+function peek(p: tPilaElementos): TElement;
 begin
     if not isEmpty(p) then
-        x := p^.info; { Devuelve el valor de la cima de la pila }
+        assign(peek, p^.info); { Devuelve el valor de la cima de la pila }
 end;
 
     { ----------------------------------------------------- }
