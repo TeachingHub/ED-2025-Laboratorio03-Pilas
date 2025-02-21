@@ -5,6 +5,8 @@ uses
     uPilaChar; { 1.1 Genera una unidad pila cuyos nodos almacenen un único carácter.}
 
 
+
+
 { 1.2
     Define una función balanceada para comprobar el balance de paréntesis de una expresión aritmética.
     Una expresión aritmética está balanceada si cada paréntesis de apertura tiene un paréntesis de cierre correspondiente.
@@ -12,6 +14,7 @@ uses
     No se comprobará si los paréntesis están en el lugar correcto (por ejemplo, (3+2*)5 o 3(+4-)2 no es una expresión aritmética 
     válida pero vamos a considerarla balanceada).
     - Entradas:
+        - Pila de caracteres 
         - Una cadena de caracteres que representa una expresión aritmética.
     - Salida:
         - Devuelve true si la expresión está balanceada, es decir, si los paréntesis están correctamente cerrados y anidados.
@@ -25,6 +28,7 @@ uses
 { 1.3
     Mejora la función balanceada para que compruebe también los corchetes.
     - Entradas:
+        - Pila de caracteres 
         - Una cadena de caracteres que representa una expresión aritmética.
     - Salida:
         - Devuelve true si la expresión está balanceada, es decir, si los paréntesis y corchetes están correctamente cerrados y anidados.
@@ -66,17 +70,60 @@ const
 
 { 1.2}
 function balanceada(exp: string): boolean;
+var
+    i: integer;
+    c: char;
+    p: tPilaChars;
+    estaBalanceada: boolean;
 begin
-    WriteLn('Implementa la función balanceada');
-    balanceada := false;
+    estaBalanceada := true;
+    initialize(p);
+    i := 1;
+    while estaBalanceada and (i <= Length(exp)) do
+    begin
+        c := exp[i];
+        if c = '(' then
+            push(p, c)
+        else if c = ')' then
+        begin
+            if isEmpty(p) then
+                estaBalanceada := false
+            else
+                pop(p);
+        end;
+        i := i + 1;
+    end;
+    balanceada := isEmpty(p);
 end;
 
 
 { 1.3}
 function balanceadaCorchetes(exp: string): boolean;
+var
+    i: integer;
+    c, cPeek: char;
+    p: tPilaChars;
+    estaBalanceada: boolean;
 begin
-    WriteLn('Implementa la función balanceadaCorchetes');
-    balanceadaCorchetes := false;
+    estaBalanceada := true;
+    initialize(p);
+    i := 1;
+    while estaBalanceada and (i <= Length(exp)) do
+    begin
+        c := exp[i];
+        if (c = '(') or (c = '[') then
+            push(p, c)
+        else
+        begin
+            cPeek := peek(p);
+            if (c = ')') and (cPeek = '(') or (c = ']') and (cPeek = '[') then
+                pop(p)
+            else if (c = ')') or (c = ']') then
+                estaBalanceada := false;
+        end;
+        i := i + 1;
+    end;
+    balanceadaCorchetes := isEmpty(p);
 end;
 
 function showOkWrong(ok: boolean): string;
@@ -104,9 +151,3 @@ begin
     WriteLn('Ejemplo 11: ', expresion11, #9, balanceadaCorchetes(expresion11), ' = ', resultado11, #9, showOkWrong(balanceadaCorchetes(expresion11) = resultado11));
     readln;
 end.
-
-
-
-
-    
-
