@@ -6,8 +6,32 @@ uses
 
 { Función para comprobar si una frase es un palíndromo }
 function esPalindromo(frase: string): boolean;
+var
+    i: integer;
+    c: char;
+    p: tPilaChars;
+    fraseInvertida: string;
 begin
-    WriteLn('No implementado...');
+    initialize(p);
+    fraseInvertida := '';
+
+    { Empujar cada carácter de la frase a la pila }
+    for i := 1 to Length(frase) do
+    begin
+        c := frase[i];
+        push(p, c);
+    end;
+
+    { Desapilar los caracteres para formar la frase invertida }
+    while not isEmpty(p) do
+    begin
+        c := peek(p);
+        fraseInvertida := fraseInvertida + c;
+        pop(p);
+    end;
+
+    { Comparar la frase original con la frase invertida }
+    esPalindromo := frase = fraseInvertida;
 end;
 
 function showOkWrong(ok: boolean): string;

@@ -27,7 +27,7 @@ const
     { Elimina el elemento de la cima de la pila }
     procedure pop(var p: tPilaEnterosExt);
     { Devuelve el elemento de la cima de la pila }
-    procedure peek(p: tPilaEnterosExt; var x: integer);
+    function peek(p: tPilaEnterosExt): integer;
     { Devuelve true si la pila está vacía }
     function isEmpty(p: tPilaEnterosExt): boolean;
 
@@ -70,71 +70,70 @@ implementation
 
     { ------------------------ Funciones básicas de las pilas ------------------------ }
 
-    { Inicializa la pila }
-    procedure initialize(var p: tPilaEnterosExt);
+{ Inicializa la pila }
+procedure initialize(var p: tPilaEnterosExt);
+begin
+    p.cima := 0;
+end;
+
+{ Agrega un elemento a la pila }
+procedure push(var p: tPilaEnterosExt; x: integer);
+begin
+    if p.cima < MAX_ELEMENTOS then
     begin
-        p.cima := 0;
+        p.cima := p.cima + 1;
+        p.stack[p.cima] := x;
     end;
+end;
 
-    { Agrega un elemento a la pila }
-    procedure push(var p: tPilaEnterosExt; x: integer);
+{ Elimina el elemento de la cima de la pila }
+procedure pop(var p: tPilaEnterosExt);
+begin
+    if p.cima > 0 then
     begin
-        if not isFull(p) then
-        begin
-            p.cima := p.cima + 1;
-            p.stack[p.cima] := x;
-        end;
-    end;
+        p.cima := p.cima - 1;
+    end
+end;
 
-    { Elimina el elemento de la cima de la pila }
-    procedure pop(var p: tPilaEnterosExt);
+{ Devuelve el elemento de la cima de la pila }
+function peek(p: tPilaEnterosExt): integer;
+begin
+    if not isEmpty(p) then
+        peek := p.stack[p.cima];
+end;
+
+{ Devuelve true si la pila está vacía }
+function isEmpty(p: tPilaEnterosExt): boolean;
+begin
+    isEmpty := p.cima = 0;
+end;
+
+
+{ Devuelve true si la pila está llena }
+function isFull(p: tPilaEnterosExt): boolean;
+begin
+    isFull := p.cima = MAX_ELEMENTOS;
+end;
+
+{ Libera los recursos de la pila }
+procedure clear(var p: tPilaEnterosExt);
+begin
+    p.cima := 0; // Los elementos se sobreescribirán en futuras inserciones
+end;
+
+{ Imprime los elementos de la pila }
+function toString(p: tPilaEnterosExt): string;
+var
+    i: integer;
+    s: string;
+begin
+    s := '';
+    for i := 0 to p.cima - 1 do
     begin
-        if p.cima > 0 then
-        begin
-            p.cima := p.cima - 1;
-        end
+        s := s + IntToStr(p.stack[p.cima-i]) + ' ';
     end;
-
-    { Devuelve el elemento de la cima de la pila }
-    procedure peek(p: tPilaEnterosExt; var x: integer);
-    begin
-        if not isEmpty(p) then
-            x := p.stack[p.cima];
-    end;
-
-    { Devuelve true si la pila está vacía }
-    function isEmpty(p: tPilaEnterosExt): boolean;
-    begin
-        isEmpty := p.cima = 0;
-    end;
-
-
-    { Devuelve true si la pila está llena }
-    function isFull(p: tPilaEnterosExt): boolean;
-    begin
-        isFull := p.cima = MAX_ELEMENTOS;
-    end;
-
-    { Libera los recursos de la pila }
-    procedure clear(var p: tPilaEnterosExt);
-    begin
-        p.cima := 0; // Los elementos se sobreescribirán en futuras inserciones
-    end;
-
-    { Imprime los elementos de la pila }
-    function toString(p: tPilaEnterosExt): string;
-    var
-        i: integer;
-        s: string;
-    begin
-        s := '';
-        for i := 0 to p.cima - 1 do
-        begin
-            s := s + IntToStr(p.stack[p.cima-i]) + ' ';
-        end;
-        toString := s;
-    end;
-
+    toString := s;
+end;
 
 
     { ------------------------ Ejercicios ------------------------ }
@@ -160,7 +159,7 @@ implementation
     }
     function contarElementos(p: tPilaEnterosExt): integer;
     begin
-        WriteLn('No implementado');
+        contarElementos := p.cima;
     end;
 
     { 
@@ -176,7 +175,7 @@ implementation
     }
     function ultimo(p: tPilaEnterosExt): integer;
     begin
-        WriteLn('No implementado');
+        ultimo := p.stack[0];
     end;
 
     { 
@@ -192,8 +191,23 @@ implementation
             - combinar([1, 2, 3], []) -> [1, 2, 3]
     }
     procedure combinar(var p1, p2: tPilaEnterosExt);
+    var
+        aux : tPilaEnterosExt;
+        num : integer;
     begin
-        WriteLn('No implementado');
+        initialize(aux);
+        while not isEmpty(p2) do
+        begin
+            num := peek(p2);
+            push(aux, num);
+            pop(p2);
+        end;
+        while not isEmpty(aux) do
+        begin
+            num := peek(aux);
+            push(p1, num);
+            pop(aux);
+        end;
     end;
 
     { 
@@ -208,8 +222,11 @@ implementation
             - popN([1, 2, 3, 4, 5], 0) -> [1, 2, 3, 4, 5]
     }
     procedure popN(var p: tPilaEnterosExt; n: integer);
+    var
+        i: integer;
     begin
-        WriteLn('No implementado');
+        for i := 1 to n do
+            pop(p);
     end;
 
     { 
@@ -224,8 +241,20 @@ implementation
             - sumarN([1, 2, 3, 4, 5], 0) -> [1, 2, 3, 4, 5]
     }
     procedure sumarN(var p: tPilaEnterosExt; n: integer);
+    var
+        i, suma, num: integer;
     begin
-        WriteLn('No implementado');
+        suma := 0;
+        if n > 0 then
+        begin
+            for i := 1 to n do
+            begin
+                num := peek(p);
+                suma := suma + num; 
+                pop(p);
+            end;
+            push(p, suma);
+        end;
     end;
 
     { 
@@ -239,8 +268,37 @@ implementation
             - invertir([1, 2, 3]) -> [3, 2, 1]
     }
     procedure invertir(var p: tPilaEnterosExt);
+    var
+        aux: tPilaEnterosExt;
+        aux2: tPilaEnterosExt;
+        num: integer;
     begin
-        WriteLn('No implementado');
+        initialize(aux);
+        initialize(aux2);
+        
+        // Primero movemos todo a aux
+        while not isEmpty(p) do
+        begin
+            num := peek(p);
+            push(aux, num);
+            pop(p);
+        end;
+        
+        // Ahora movemos todo de aux a aux2
+        while not isEmpty(aux) do
+        begin
+            num := peek(aux);
+            push(aux2, num);
+            pop(aux);
+        end;
+        
+        // Finalmente movemos todo de aux2 a p
+        while not isEmpty(aux2) do
+        begin
+            num := peek(aux2);
+            push(p, num);
+            pop(aux2);
+        end;
     end;
 
     { 
@@ -254,8 +312,30 @@ implementation
             - repetirN([1, 2, 3], 1) -> [1, 2, 3]
     }
     procedure repetirN(var p: tPilaEnterosExt; n: integer);
+    var
+        aux: tPilaEnterosExt;
+        i, num: integer;
     begin
-        WriteLn('No implementado');
+        if n> 1 then
+        begin
+            initialize(aux);
+            while not isEmpty(p) do
+            begin
+                num := peek(p);
+                push(aux, num);
+                pop(p);
+            end;
+            for i := 1 to n do
+            begin
+                while not isEmpty(aux) do
+                begin
+                    num := peek(aux);
+                    push(p, num);
+                    push(p, num);
+                    pop(aux);
+                end;
+            end;
+        end;
     end;
 
     { 
@@ -270,8 +350,27 @@ implementation
             - contarApariciones([1, 2, 3, 4, 5, 2], 2) -> 2
     }
     function contarApariciones(var p: tPilaEnterosExt; n: integer): integer;
+    var
+        aux: tPilaEnterosExt;
+        contador, num: integer;
     begin
-        WriteLn('No implementado');
+        initialize(aux);
+        contador := 0;
+        while not isEmpty(p) do
+        begin
+            num := peek(p);
+            if num = n then
+                contador := contador + 1;
+            push(aux, num);
+            pop(p);
+        end;
+        while not isEmpty(aux) do
+        begin
+            num := peek(aux);
+            push(p, num);
+            pop(aux);
+        end;
+        contarApariciones := contador;
     end;
 
 end.
