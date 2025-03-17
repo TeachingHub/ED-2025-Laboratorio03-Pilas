@@ -228,6 +228,13 @@ begin
     inicializarPilaConElementos(p, ejemplo2);
     repetirN(p, 1);
     test_correcto := test_correcto and (toString(p) = '1 2 3 ');
+
+    { Ejemplo 3: repetirN([1, 2, 3], 4) -> [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3] }
+    ejemplo3 := '1,2,3';
+    inicializarPilaConElementos(p, ejemplo3);
+    repetirN(p, 4);
+    test_correcto := test_correcto and (toString(p) = '1 1 1 1 2 2 2 2 3 3 3 3 ');
+    testRepetirN := test_correcto;
 end;
 
 

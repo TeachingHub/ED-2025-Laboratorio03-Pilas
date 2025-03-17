@@ -326,15 +326,12 @@ implementation
                 push(aux, num);
                 pop(p);
             end;
-            for i := 1 to n do
+            while not isEmpty(aux) do
             begin
-                while not isEmpty(aux) do
-                begin
-                    num := peek(aux);
+                num := peek(aux);
+                for i := 1 to n do
                     push(p, num);
-                    push(p, num);
-                    pop(aux);
-                end;
+                pop(aux);
             end;
         end;
     end;
